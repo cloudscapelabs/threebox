@@ -176,7 +176,6 @@ AnimationManager.prototype = {
 					),
 					start: Date.now(),
 					expiration: Date.now() + entry.parameters.duration,
-					getTimeProgress: options.getTimeProgress || null,
 					cb: cb
 				}
 			);
@@ -188,6 +187,29 @@ AnimationManager.prototype = {
 
 			return this;
 		};
+
+		obj.customAnimation = function (options, cb) {
+			let entry = {
+				type: 'custom',
+				parameters: utils._validate(options, defaults.custom)
+			};
+
+			utils.extend(
+				entry.parameters,
+				{
+					start: Date.now(),
+					expiration: Date.now() + entry.parameters.duration,
+					cb: cb
+				}
+			);
+
+			this.animationQueue
+			.push(entry);
+
+			tb.map.repaint = true;
+
+			return this;
+		}
 
 		obj._setObject = function (options) {
 
@@ -458,6 +480,12 @@ AnimationManager.prototype = {
 
 					}
 
+					if (item.type === 'custom') {
+						let objectState = options.getObjectState(now, options)
+						object._setObject(objectState);
+
+					}
+
 					//[jscastro] play default animation
 					if (item.type === 'playDefault') {
 						object.activateAllActions();
@@ -478,10 +506,14 @@ AnimationManager.prototype = {
 }
 
 const defaults = {
-    followPath: {
-        path: null,
-        duration: 1000,
-        trackHeading: true,
+	custom: {
+		duration: 1000,
+		getObjectState: null,
+	},
+	followPath: {
+		path: null,
+		duration: 1000,
+		trackHeading: true,
 		getTimeProgress: null
     }
 }
