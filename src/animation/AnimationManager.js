@@ -8,7 +8,7 @@ const utils = require("../utils/utils.js");
 function AnimationManager(map) {
 
     this.map = map
-    this.enrolledObjects = [];    
+    this.enrolledObjects = [];
     this.previousFrameTime;
 
 };
@@ -156,7 +156,7 @@ AnimationManager.prototype = {
 				obj.isPlaying = false;
 				cancelAnimationFrame(obj.animationMethod);
 			}
-			//TODO: if this is removed, it produces an error in 
+			//TODO: if this is removed, it produces an error in
 			this.animationQueue = [];
 			return this;
 		}
@@ -176,6 +176,7 @@ AnimationManager.prototype = {
 					),
 					start: Date.now(),
 					expiration: Date.now() + entry.parameters.duration,
+					getTimeProgress: options.getTimeProgress || null,
 					cb: cb
 				}
 			);
@@ -244,7 +245,7 @@ AnimationManager.prototype = {
 				this.position.copy(w);
 				let p = utils.unprojectFromWorld(w);
 				this.coordinates = options.position = p;
-			} 
+			}
 
 			//Each time the object is positioned, project the floor and correct shadow plane
 			this.setBoundingBoxShadowFloor();
@@ -400,7 +401,12 @@ AnimationManager.prototype = {
 
 				else {
 
-					let timeProgress = (now - options.start) / options.duration;
+					let timeProgress
+					if (options.getTimeProgress != null) {
+						timeProgress = options.getTimeProgress(now, options)
+					} else {
+						timeProgress = (now - options.start) / options.duration;
+					}
 
 					if (item.type === 'set') {
 
@@ -475,7 +481,8 @@ const defaults = {
     followPath: {
         path: null,
         duration: 1000,
-        trackHeading: true
+        trackHeading: true,
+		getTimeProgress: null
     }
 }
 module.exports = exports = AnimationManager;
