@@ -115,7 +115,7 @@ THREE.CSS2DRenderer = function () {
 				vector.applyMatrix4(viewProjectionMatrix);
 
 				var element = object.element;
-				var style = 'translate(-50%,-50%) translate(' + (vector.x * _widthHalf + _widthHalf) + 'px,' + (- vector.y * _heightHalf + _heightHalf) + 'px)';
+				var style = 'translate(-50%,-100%) translate(' + (vector.x * _widthHalf + _widthHalf) + 'px,' + (- vector.y * _heightHalf + _heightHalf) + 'px)';
 
 				element.style.WebkitTransform = style;
 				element.style.MozTransform = style;
