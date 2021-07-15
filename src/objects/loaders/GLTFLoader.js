@@ -1,4 +1,4 @@
-const THREE = require('../../three.js');
+const THREE = require('three')
 
 /**
  * @author Rich Tibbett / https://github.com/richtr
@@ -2417,7 +2417,7 @@ THREE.GLTFLoader = (function () {
 				if (source.mimeType === 'image/png') {
 
 					// Inspect the PNG 'IHDR' chunk to determine whether the image could have an
-					// alpha channel. This check is conservative — the image could have an alpha
+					// alpha channel. This check is conservative ï¿½ the image could have an alpha
 					// channel with all values == 1, and the indexed type (colorType == 3) only
 					// sometimes contains alpha.
 					//

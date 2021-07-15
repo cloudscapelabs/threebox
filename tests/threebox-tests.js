@@ -1,6 +1,6 @@
 window.test = require('tape'),
 window.Threebox = require("../src/Threebox.js"),
-window.THREE = require("../src/three.js");
+window.THREE = require("three");
 
 //window.runTests = function () {
 //    material(instance);

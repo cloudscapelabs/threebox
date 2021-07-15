@@ -1,4 +1,4 @@
-const THREE = require('../../three.js');
+const THREE = require('three')
 
 /**
  * Loads a Wavefront .mtl file specifying materials
