@@ -2,6 +2,8 @@
  * @author peterqliu / https://github.com/peterqliu
  * @author jscastro / https://github.com/jscastro76
 */
+const THREE = require('three');
+
 const utils = require("../utils/utils.js");
 const material = require("../utils/material.js");
 const Objects = require('./objects.js');
