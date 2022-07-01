@@ -1,4 +1,4 @@
-const THREE = require('three')
+const THREE = require('three');
 
 /**
  * @author mrdoob / http://mrdoob.com/

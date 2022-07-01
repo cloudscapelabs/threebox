@@ -2,7 +2,7 @@
  * @author mrdoob / http://mrdoob.com/
  */
 
-const THREE = require('three')
+const THREE = require('three');
 
 (function () {
 

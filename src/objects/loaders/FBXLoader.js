@@ -1,4 +1,4 @@
-const THREE = require('three')
+const THREE = require('three');
 const fflate = require('../fflate.min.js');
 
 /**co

@@ -1,4 +1,4 @@
-const THREE = require('three')
+const THREE = require('three');
 const utils = require("../utils/utils.js");
 const Objects = require('./objects.js');
 

@@ -1,4 +1,4 @@
-const THREE = require('three')
+const THREE = require('three');
 
 (function () {
 
