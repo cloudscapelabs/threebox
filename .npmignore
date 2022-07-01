@@ -1,0 +1,22 @@
+﻿################################################################################
+# This .gitignore file was automatically created by Microsoft(R) Visual Studio.
+################################################################################
+
+/.github
+/.idea
+/dist/.gitkeep
+/tests
+/docs
+/node_modules
+/obj/Debug
+/obj/
+/bin/
+/.vs/
+/examples/config.js
+/.vs/ThreeboxSolution/v16
+/tests/node_modules
+/tests/obj/Debug
+/server.js
+/ThreeboxSolution*
+/server*
+/examples

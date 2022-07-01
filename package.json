@@ -1,6 +1,6 @@
 {
     "name": "@cloudscapelabs/threebox",
-    "version": "2.2.7-csl1",
+    "version": "2.2.7-csl2",
     "description": "A Three.js plugin for Mapbox GL JS, using the CustomLayerInterface feature. Provides convenient methods to manage objects in lnglat coordinates, and to synchronize the map and scene cameras.",
     "main": "main.js",
     "repository": {
@@ -14,12 +14,13 @@
     },
     "homepage": "https://github.com/jscastro76/threebox#readme",
     "scripts": {
-        "build": "browserify -p tinyify exports.js > dist/threebox.min.js && ncp ./examples/css/threebox.css ./dist/threebox.css --stopOnErr",
+        "build": "browserify --exclude three -p tinyify main.js > dist/threebox.min.js && ncp ./examples/css/threebox.css ./dist/threebox.css --stopOnErr",
         "dev": "watchify exports.js --verbose -o dist/threebox.js ",
         "all": "browserify -p tinyify exports.js > dist/threebox.min.js && watchify exports.js --verbose -o dist/threebox.js ",
         "test": "browserify tests/threebox-tests.js > tests/threebox-tests-bundle.js",
         "start": "node server.js",
-        "stop": "node server.stop.js"
+        "stop": "node server.stop.js",
+        "prepublish": "npm run build"
     },
     "directories": {
         "doc": "docs",
