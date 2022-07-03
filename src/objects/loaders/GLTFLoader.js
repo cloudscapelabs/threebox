@@ -2752,6 +2752,9 @@ const THREE = require('three');
 			const extensions = this.extensions;
 			const materialDef = json.materials[materialIndex];
 			let materialType;
+
+			let alphaTest = undefined
+
 			const materialParams = {};
 			const materialExtensions = materialDef.extensions || {};
 			const pending = [];
@@ -2834,7 +2837,7 @@ const THREE = require('three');
 
 				if (alphaMode === ALPHA_MODES.MASK) {
 
-					materialParams.alphaTest = materialDef.alphaCutoff !== undefined ? materialDef.alphaCutoff : 0.5;
+					alphaTest = materialDef.alphaCutoff !== undefined ? materialDef.alphaCutoff : 0.5;
 
 				}
 
@@ -2902,6 +2905,11 @@ const THREE = require('three');
 					index: materialIndex
 				});
 				if (materialDef.extensions) addUnknownExtensionsToUserData(extensions, material, materialDef);
+
+				if (alphaTest) {
+					material.alphaTest = alphaTest
+				}
+
 				return material;
 
 			});
