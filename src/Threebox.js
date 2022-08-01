@@ -550,6 +550,9 @@ Threebox.prototype = {
 
 		});
 
+		this.map.on('resize', () => {
+			this.renderer.setSize(this.map.getCanvas().clientWidth, this.map.getCanvas().clientHeight)
+		});
 	},
 
 	//[jscastro] added property to manage an athmospheric sky layer
