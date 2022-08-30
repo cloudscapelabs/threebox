@@ -32,6 +32,9 @@ function CameraSync(map, camera, world) {
         .on('move', function () {
             _this.updateCamera();
         })
+        .on('moveend', function () {
+            _this.updateCamera()
+        })
         .on('resize', function () {
             _this.setupCamera();
         })
@@ -90,7 +93,7 @@ CameraSync.prototype = {
             // Furthest distance optimized by @jscastro76
             const topHalfSurfaceDistance = Math.sin(this.halfFov) * this.cameraToCenterDistance / Math.sin(Math.PI - groundAngle - this.halfFov);
 
-            // Calculate z distance of the farthest fragment that should be rendered. 
+            // Calculate z distance of the farthest fragment that should be rendered.
             furthestDistance = pitchAngle * topHalfSurfaceDistance + this.cameraToCenterDistance;
 
             // Add a bit extra to avoid precision problems when a fragment's distance is exactly `furthestDistance`
@@ -120,7 +123,7 @@ CameraSync.prototype = {
         if (t.elevation) cameraWorldMatrix.elements[14] = t._camera.position[2] * worldSize;
         //this.camera.matrixWorld.elements is equivalent to t._camera._transform
         this.camera.matrixWorld.copy(cameraWorldMatrix);
-        
+
         let zoomPow = t.scale * this.state.worldSizeRatio;
         // Handle scaling and translation of objects in the map in the world's matrix transform, not the camera
         let scale = new THREE.Matrix4;
