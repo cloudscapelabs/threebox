@@ -551,6 +551,7 @@ Threebox.prototype = {
 		});
 
 		this.map.on('resize', () => {
+			this.renderer.setPixelRatio(window.devicePixelRatio);
 			this.renderer.setSize(this.map.getCanvas().clientWidth, this.map.getCanvas().clientHeight)
 		});
 	},
