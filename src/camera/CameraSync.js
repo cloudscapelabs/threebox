@@ -28,12 +28,22 @@ function CameraSync(map, camera, world) {
 
     // Listen for move events from the map and update the Three.js camera
     let _this = this; // keep the function on _this
+    let terrainEnabled;
     this.map
         .on('move', function () {
             _this.updateCamera();
         })
         .on('moveend', function () {
-            _this.updateCamera()
+            _this.updateCamera();
+        })
+        .on('idle', () => {
+            let nextTerrain = !!this.map.getStyle().terrain;
+
+            if (nextTerrain !== terrainEnabled) {
+                _this.updateCamera();
+
+                terrainEnabled = nextTerrain;
+            }
         })
         .on('resize', function () {
             _this.setupCamera();
