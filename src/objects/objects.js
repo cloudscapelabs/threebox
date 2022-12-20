@@ -7,6 +7,7 @@ const material = require("../utils/material.js");
 const THREE = require('three');
 const AnimationManager = require("../animation/AnimationManager.js");
 const CSS2D = require("./CSS2DRenderer.js");
+const SkeletonUtils = require("../SkeletonUtils.js");
 
 function Objects(){
 
@@ -52,7 +53,7 @@ Objects.prototype = {
 		}
 
 		else {
-			// Bestow this mesh with animation superpowers and keeps track of its movements in the global animation queue			
+			// Bestow this mesh with animation superpowers and keeps track of its movements in the global animation queue
 			root.animationManager.unenroll(obj);
 
 		}
@@ -72,7 +73,7 @@ Objects.prototype = {
 		}
 
 		else {
-			
+
 			if (!obj.coordinates) obj.coordinates = [0, 0, 0];
 
 			//[jscastro] added property for the internal 3D model
@@ -94,10 +95,10 @@ Objects.prototype = {
 				//set(value) { _animations = value}
 			});
 
-			// Bestow this mesh with animation superpowers and keeps track of its movements in the global animation queue			
+			// Bestow this mesh with animation superpowers and keeps track of its movements in the global animation queue
 			root.animationManager.enroll(obj);
 
-			// Place an object on the map at the given lnglat 
+			// Place an object on the map at the given lnglat
 			obj.setCoords = function (lnglat) {
 
 				// CSS2DObjects could bring an specific vertical positioning to correct in units
@@ -248,7 +249,7 @@ Objects.prototype = {
 				}
 			}
 
-			//[jscastro] Set the positional and pivotal anchor automatically from string param  
+			//[jscastro] Set the positional and pivotal anchor automatically from string param
 			obj.setAnchor = function (anchor) {
 				const b = obj.box3();
 				//const size = b.getSize(new THREE.Vector3());
@@ -377,7 +378,7 @@ Objects.prototype = {
 				}
 			});
 
-			//[jscastro] add CSS2 label method 
+			//[jscastro] add CSS2 label method
 			obj.addLabel = function (HTMLElement, visible, center, height) {
 				if (HTMLElement) {
 					//we add it to the first children to get same boxing and position
@@ -386,7 +387,7 @@ Objects.prototype = {
 				}
 			}
 
-			//[jscastro] remove CSS2 label method 
+			//[jscastro] remove CSS2 label method
 			obj.removeLabel = function () {
 				obj.removeCSS2D(labelName);
 			}
@@ -400,7 +401,7 @@ Objects.prototype = {
 				return label;
 			}
 
-			//[jscastro] add tooltip method 
+			//[jscastro] add tooltip method
 			obj.addTooltip = function (tooltipText, mapboxStyle, center, custom = true, height = 1) {
 				let t = obj.addHelp(tooltipText, tooltipName, mapboxStyle, center, height);
 				t.visible = false;
@@ -412,7 +413,7 @@ Objects.prototype = {
 				obj.removeCSS2D(tooltipName);
 			}
 
-			//[jscastro] add tooltip method 
+			//[jscastro] add tooltip method
 			obj.addHelp = function (helpText, objName = helpName, mapboxStyle = false, center = obj.anchor, height = 0) {
 				let divHelp = root.drawTooltip(helpText, mapboxStyle);
 				let h = obj.addCSS2D(divHelp, objName, center, height);
@@ -425,7 +426,7 @@ Objects.prototype = {
 				obj.removeCSS2D(helpName);
 			}
 
-			//[jscastro] add CSS2D help method 
+			//[jscastro] add CSS2D help method
 			obj.addCSS2D = function (element, objName, center = obj.anchor, height = 1) {
 				if (element) {
 					const box = obj.box3();
@@ -434,7 +435,7 @@ Objects.prototype = {
 					obj.removeCSS2D(objName);
 					let c = new CSS2D.CSS2DObject(element);
 					c.name = objName;
-					c.position.set(((-size.x * 0.5) - obj.model.position.x - center.x + bottomLeft.x), ((-size.y * 0.5) - obj.model.position.y - center.y + bottomLeft.y), size.z * height); 
+					c.position.set(((-size.x * 0.5) - obj.model.position.x - center.x + bottomLeft.x), ((-size.y * 0.5) - obj.model.position.y - center.y + bottomLeft.y), size.z * height);
 					c.visible = false; //only visible on mouseover or selected
 					obj.scaleGroup.add(c);
 					return c;
@@ -467,7 +468,7 @@ Objects.prototype = {
 						if (c.isMesh) c.castShadow = true;
 					});
 					if (value) {
-						// we add the shadow plane automatically 
+						// we add the shadow plane automatically
 						const s = obj.modelSize;
 						const sz = [s.x, s.y, s.z, obj.modelHeight];
 						const pSize = Math.max(...sz) * 10;
@@ -481,7 +482,7 @@ Objects.prototype = {
 						p.receiveShadow = value;
 						obj.add(p);
 					} else {
-						// or we remove it 
+						// or we remove it
 						obj.traverse(function (c) {
 							if (c.isMesh && c.material instanceof THREE.ShadowMaterial)
 								obj.remove(c);
@@ -700,7 +701,7 @@ Objects.prototype = {
 						obj.matrix.extractRotation(rm);
 						rmi.copy(rm).invert();
 						dup.setRotationFromMatrix(rmi);
-						//now the object inside will give us a NAABB Non-Axes Aligned Bounding Box 
+						//now the object inside will give us a NAABB Non-Axes Aligned Bounding Box
 						bounds = new THREE.Box3().setFromObject(model);
 					}
 				}
@@ -742,7 +743,7 @@ Objects.prototype = {
 			});
 
 			//[jscastro] added property to calculate the units per meter in a given latitude
-			//reduced to 7 decimals to avoid deviations on the size of the same object  
+			//reduced to 7 decimals to avoid deviations on the size of the same object
 			Object.defineProperty(obj, 'unitsPerMeter', {
 				get() { return Number(utils.projectedUnitsPerMeter(obj.coordinates[1]).toFixed(7)); }
 			});
@@ -782,7 +783,7 @@ Objects.prototype = {
 					if (scale) obj.userData.mapScale = scale;
 					obj.setFixedZoom(obj.userData.mapScale); //apply fixed zoom
 				} else obj.scale.set(1, 1, 1);
-			} 
+			}
 
 			function zoomScale(zoom) { return Math.pow(2, zoom); }
 
@@ -791,7 +792,7 @@ Objects.prototype = {
 				obj.setScale(scale);
 				obj.setBoundingBoxShadowFloor();
 				obj.setReceiveShadowFloor();
-			} 
+			}
 
 		}
 
@@ -824,7 +825,9 @@ Objects.prototype = {
 		//[jscastro] clone + assigning all the attributes
 		obj.duplicate = function (options) {
 
-			let dupe = obj.clone(true);	//clone the whole threebox object
+			// [csl] SkeletonUtils.clone fixes an issue with some models https://github.com/jscastro76/threebox/issues/363
+			// let dupe = obj.clone(true);	//clone the whole threebox object
+			let dupe = SkeletonUtils.clone(obj)
 			dupe.getObjectByName("model").animations = obj.animations; //we must set this explicitly before addMethods
 			if (dupe.userData.feature) {
 				if (options && options.feature) dupe.userData.feature = options.feature;
@@ -959,7 +962,7 @@ Objects.prototype = {
 
 	animationManager: new AnimationManager,
 
-	//[jscastro] add tooltip method 
+	//[jscastro] add tooltip method
 	drawTooltip : function (tooltipText, mapboxStyle = false) {
 		if (tooltipText) {
 			let divToolTip;
@@ -1080,7 +1083,7 @@ Objects.prototype = {
 			units: 'scene',
 			anchor: 'bottom-left',
 			bbox: true,
-			tooltip: true, 
+			tooltip: true,
 			raycasted: true
 		},
 
