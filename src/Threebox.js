@@ -47,9 +47,9 @@ Threebox.prototype = {
 		this.map = map;
 		this.map.tb = this; //[jscastro] needed if we want to queryRenderedFeatures from map.onload
 
-		this.objects = new Objects();
+		this.objects = new Objects(this.map);
 
-		this.mapboxVersion = parseFloat(this.map.version); 
+		this.mapboxVersion = parseFloat(this.map.version);
 
 		// Set up a THREE.js scene
 		this.renderer = new THREE.WebGLRenderer({
@@ -154,7 +154,7 @@ Threebox.prototype = {
 			let lngDiff; // difference between cursor and model left corner
 			let latDiff; // difference between cursor and model bottom corner
 			let altDiff; // difference between cursor and model height
-			let rotationDiff; 
+			let rotationDiff;
 
 			// Return the xy coordinates of the mouse position
 			function mousePos(e) {
@@ -164,7 +164,7 @@ Threebox.prototype = {
 					y: e.originalEvent.clientY - rect.top - canvas.clientTop
 				};
 			}
-			
+
 			this.unselectObject = function () {
 				//deselect, reset and return
 				this.selectedObject.selected = false;
@@ -714,7 +714,7 @@ Threebox.prototype = {
 		if (options.clone === false) {
 			return new Promise(
 				async (resolve) => {
-					loader(options, cb, async (obj) => {
+					loader(this, options, cb, async (obj) => {
 						resolve(obj);
 					});
 				});
@@ -735,7 +735,7 @@ Threebox.prototype = {
 				this.objectsCache.set(options.obj, {
 					promise: new Promise(
 						async (resolve, reject) => {
-							loader(options, cb, async (obj) => {
+							loader(this, options, cb, async (obj) => {
 								if (obj.duplicate) {
 									resolve(obj.duplicate());
 								} else {
@@ -983,7 +983,7 @@ Threebox.prototype = {
 
 	//[jscastro] get the sun position (azimuth, altitude) from a given datetime, lng, lat
 	getSunPosition: function (date, coords) {
-		return SunCalc.getPosition(date || Date.now(), coords[1], coords[0]);  
+		return SunCalc.getPosition(date || Date.now(), coords[1], coords[0]);
 	},
 
 	//[jscastro] get the sun times for sunrise, sunset, etc.. from a given datetime, lng, lat and alt
@@ -1024,9 +1024,9 @@ Threebox.prototype = {
 		}
 
 		this.lightDateTime = date;
-		this.lightLng = this.mapCenter.lng; 
+		this.lightLng = this.mapCenter.lng;
 		this.lightLat = this.mapCenter.lat
-		this.sunPosition = this.getSunPosition(date, [this.mapCenter.lng, this.mapCenter.lat]);  
+		this.sunPosition = this.getSunPosition(date, [this.mapCenter.lng, this.mapCenter.lat]);
 		let altitude = this.sunPosition.altitude;
 		let azimuth = Math.PI + this.sunPosition.azimuth;
 		//console.log("Altitude: " + utils.degreeify(altitude) + ", Azimuth: " + (utils.degreeify(azimuth)));
@@ -1094,21 +1094,24 @@ Threebox.prototype = {
 
 	//[jscastro] method to fully dispose the resources, watch out is you call this without navigating to other page
 	dispose: async function () {
+		this.disposed = true;
 
-		console.log(this.memory());
+		if (this.options.logMemory) {
+			console.log(this.memory());
+		}
 		//console.log(window.performance.memory);
 
 		return new Promise((resolve) => {
 			resolve(
 				this.clear(null, true).then((resolve) => {
-					this.map.remove();
-					this.map = {};
 					this.scene.remove(this.world);
 					this.world.children = [];
 					this.world = null;
 					this.objectsCache.clear();
 					this.labelRenderer.dispose();
-					console.log(this.memory());
+					if (this.options.logMemory) {
+						console.log(this.memory());
+					}
 					this.renderer.dispose();
 					return resolve;
 				})
@@ -1152,7 +1155,7 @@ Threebox.prototype = {
 		this.lights.dirLight.shadow.camera.bottom = this.lights.dirLight.shadow.camera.left = -d2;
 		this.lights.dirLight.shadow.camera.near = 1;
 		this.lights.dirLight.shadow.camera.visible = true;
-		this.lights.dirLight.shadow.camera.far = 400000000; 
+		this.lights.dirLight.shadow.camera.far = 400000000;
 
 		this.lights.hemiLight = new THREE.HemisphereLight(new THREE.Color(0xffffff), new THREE.Color(0xffffff), 0.6);
 		this.lights.hemiLight.color.setHSL(0.661, 0.96, 0.12);
@@ -1198,7 +1201,7 @@ var defaultOptions = {
 	orthographic: false,
 	fov: ThreeboxConstants.FOV_DEGREES,
 	sky: false,
-	terrain: false
+	terrain: false,
+	logMemory: false,
 }
 module.exports = exports = Threebox;
-
