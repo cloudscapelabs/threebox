@@ -9,12 +9,12 @@ const AnimationManager = require("../animation/AnimationManager.js");
 const CSS2D = require("./CSS2DRenderer.js");
 const SkeletonUtils = require("../SkeletonUtils.js");
 
-function Objects(){
-
+function Objects(map) {
+	Objects.prototype.map = map;
+	Objects.prototype.animationManager = new AnimationManager(this.map)
 }
 
 Objects.prototype = {
-
 	// standard 1px line with gl
 	line: function (obj) {
 
@@ -176,7 +176,7 @@ Objects.prototype = {
 				model.position.add(point); // re-add the offset
 				model.rotateOnAxis(axis, theta)
 
-				tb.map.repaint = true;
+				this.map.repaint = true;
 			}
 
 
@@ -819,7 +819,7 @@ Objects.prototype = {
 			})
 
 			obj.scaleGroup.remove(o);
-			tb.map.repaint = true;
+			this.map.repaint = true;
 		}
 
 		//[jscastro] clone + assigning all the attributes
@@ -959,8 +959,6 @@ Objects.prototype = {
 
 		return geoGroup
 	},
-
-	animationManager: new AnimationManager,
 
 	//[jscastro] add tooltip method
 	drawTooltip : function (tooltipText, mapboxStyle = false) {

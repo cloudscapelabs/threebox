@@ -6,11 +6,9 @@ const THREE = require('three');
 const utils = require("../utils/utils.js");
 
 function AnimationManager(map) {
-
     this.map = map
     this.enrolledObjects = [];
     this.previousFrameTime;
-
 };
 
 AnimationManager.prototype = {
@@ -20,6 +18,7 @@ AnimationManager.prototype = {
 	},
 
 	enroll: function (obj) {
+		const map = this.map;
 
 		//[jscastro] add the object default animations
 		obj.clock = new THREE.Clock();
@@ -133,7 +132,7 @@ AnimationManager.prototype = {
 				this.animationQueue
 					.push(entry);
 
-				tb.map.repaint = true;
+				map.repaint = true;
 			}
 
 			//if no duration set, stop object's existing animations and go to that state immediately
@@ -183,7 +182,7 @@ AnimationManager.prototype = {
 			this.animationQueue
 				.push(entry);
 
-			tb.map.repaint = true;
+			map.repaint = true;
 
 			return this;
 		};
@@ -206,7 +205,7 @@ AnimationManager.prototype = {
 			this.animationQueue
 			.push(entry);
 
-			tb.map.repaint = true;
+			map.repaint = true;
 
 			return this;
 		}
@@ -274,7 +273,7 @@ AnimationManager.prototype = {
 			this.setReceiveShadowFloor();
 
 			this.updateMatrixWorld();
-			tb.map.repaint = true;
+			map.repaint = true;
 
 			//const threeTarget = new THREE.EventDispatcher();
 			//threeTarget.dispatchEvent({ type: 'event', detail: { object: this, action: { position: options.position, rotation: options.rotation, scale: options.scale } } });
@@ -306,7 +305,7 @@ AnimationManager.prototype = {
 				this.animationQueue
 					.push(entry);
 
-				tb.map.repaint = true
+				map.repaint = true
 				return this;
 			}
 		}
@@ -366,13 +365,14 @@ AnimationManager.prototype = {
 				// Update the animation mixer and render this frame
 				obj.mixer.update(0.01);
 			}
-			tb.map.repaint = true;
+			map.repaint = true;
 			return this;
 		}
 
 	},
 
 	update: function (now) {
+		const map = this.map;
 
 		if (this.previousFrameTime === undefined) this.previousFrameTime = now;
 
@@ -492,7 +492,7 @@ AnimationManager.prototype = {
 						object.isPlaying = true;
 						object.animationMethod = requestAnimationFrame(this.update);
 						object.mixer.update(object.clock.getDelta());
-						tb.map.repaint = true;
+						map.repaint = true;
 					}
 
 				}

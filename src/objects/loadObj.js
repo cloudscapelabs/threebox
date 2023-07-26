@@ -15,7 +15,7 @@ const gltfLoader = new GLTFLoader();
 const fbxLoader = new FBXLoader();
 const daeLoader = new ColladaLoader();
 
-function loadObj(options, cb, promise) {
+function loadObj(tb, options, cb, promise) {
 
 	if (options === undefined) return console.error("Invalid options provided to loadObj()");
 	options = utils._validate(options, Objects.prototype._defaults.loadObj);
@@ -53,6 +53,9 @@ function loadObj(options, cb, promise) {
 		}
 
 		loader.load(options.obj, obj => {
+			if (tb.disposed) {
+				return
+			}
 
 			//[jscastro] MTL/GLTF/FBX models have a different structure
 			let animations = [];
@@ -79,8 +82,8 @@ function loadObj(options, cb, promise) {
 			// [jscastro] normalize specular/metalness/shininess from meshes in FBX and GLB model as it would need 5 lights to illuminate them properly
 			if (options.normalize) { normalizeSpecular(obj); }
 			obj.name = "model";
-			let userScaleGroup = Objects.prototype._makeGroup(obj, options);
-			Objects.prototype._addMethods(userScaleGroup);
+			let userScaleGroup = tb.objects._makeGroup(obj, options);
+			tb.objects._addMethods(userScaleGroup);
 			//[jscastro] calculate automatically the pivotal center of the object
 			userScaleGroup.setAnchor(options.anchor);
 			//[jscastro] override the center calculated if the object has adjustments
